@@ -1,39 +1,41 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const fieldsets = document.querySelectorAll('.beverage');
+const form = document.querySelector('form');
+const beverageForm = document.querySelector('.beverage');
+const addBeverageButton = document.querySelector('.add-button');
+let beverageCount = 1;
 
-    fieldsets.forEach((fieldset, index) => {
-        const removeButton = document.createElement('button');
-        removeButton.classList.add('remove-button');
-        removeButton.textContent = 'X';
-        fieldset.appendChild(removeButton); // Добавляем кнопку в конец fieldset
-
-        if (fieldsets.length > 1) {
-            removeButton.addEventListener('click', function() {
-                fieldset.remove();
-            });
-        } else {
-            removeButton.disabled = true;
-        }
+addBeverageButton
+    .addEventListener('click', () => {
+        beverageCount++;
+        const clonedBeverageForm = beverageForm.cloneNode(true);
+        clonedBeverageForm.querySelector('.beverage-count').textContent = `Напиток №${beverageCount}`
+        form.insertBefore(clonedBeverageForm, addBeverageButton.parentNode);
     });
 
-    const addButton = document.querySelector('.add-button');
-    addButton.addEventListener('click', function() {
-        const newBeverage = fieldsets[0].cloneNode(true); // Клонируем первый fieldset
-        document.querySelector('form').appendChild(newBeverage);
-    });
+const modal = document.querySelector('.modal');
+const submitButton = document.querySelector('.submit-button');
+const modalContent = document.querySelector('.modal-content');
+const modalClose = document.querySelector('.modal-close');
+
+submitButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    modalContent.textContent = `Вы заказали ${formatDrinkWord(beverageCount)}`;
+    modal.style.display = 'block'
 });
 
-(function() {
-    const form = document.querySelector('form');
-    const beverageForm = document.querySelector('.beverage');
-    const addBeverageButton = document.querySelector('.add-button');
-    let beverageCount = 1;
+modalClose.addEventListener('click', () => modal.style.display = 'none');
 
-    addBeverageButton
-        .addEventListener('click', () => {
-            beverageCount++;
-            const clonedBeverageForm = beverageForm.cloneNode(true);
-            clonedBeverageForm.querySelector('.beverage-count').textContent = `Напиток №${beverageCount}`
-            form.insertBefore(clonedBeverageForm, addBeverageButton.parentNode);
-        });
-})();
+window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+
+function formatDrinkWord(count) {
+    if (count % 10 === 1 && count % 100 !== 11) {
+        return `${count} напиток`;
+    } else if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) {
+        return `${count} напитка`;
+    } else {
+        return `${count} напитков`;
+    }
+}
