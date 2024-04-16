@@ -45,3 +45,9 @@
     border-radius: 5px;
 }
 
+.remove-button {
+    position: absolute;
+    top: 20px;
+    right: 12px;
+}
+
