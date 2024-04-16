@@ -97,6 +97,11 @@ submitButton.addEventListener('click', (e) => {
         additionalColumn.textContent = additional.join(', ');
         row.appendChild(additionalColumn);
 
+        const messageColumn = document.createElement('td');
+        const userText = form.querySelector('.user-text');
+        messageColumn.textContent = userText.textContent;
+        row.appendChild(messageColumn);
+
         modalTable
             .querySelector('tbody')
             .appendChild(row);
