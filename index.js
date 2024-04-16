@@ -3,13 +3,35 @@ const beverageForm = document.querySelector('.beverage');
 const addBeverageButton = document.querySelector('.add-button');
 let beverageCount = 1;
 
+
+
+
+
 addBeverageButton
     .addEventListener('click', () => {
         beverageCount++;
         const clonedBeverageForm = beverageForm.cloneNode(true);
         clonedBeverageForm.querySelector('.beverage-count').textContent = `Напиток №${beverageCount}`
+
+        let removeButton = clonedBeverageForm.querySelector('.remove-button')
+        removeButton.addEventListener('click', function () {
+            deleteBeverage(clonedBeverageForm)
+        });
+
         form.insertBefore(clonedBeverageForm, addBeverageButton.parentNode);
     });
+
+function deleteBeverage(beverage) {
+    if (beverageCount === 1)
+        return
+    beverage.remove();
+    beverageCount--;
+    let beverages = document.getElementsByClassName('beverage')
+
+    for (let i = 0; i < beverageCount; i++) {
+        beverages[i].querySelector('.beverage-count').textContent = `Напиток №${i + 1}`
+    }
+}
 
 const modal = document.querySelector('.modal');
 const submitButton = document.querySelector('.submit-button');
