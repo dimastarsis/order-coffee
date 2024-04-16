@@ -3,15 +3,22 @@ const beverageForm = document.querySelector('.beverage');
 const addBeverageButton = document.querySelector('.add-button');
 let beverageCount = 1;
 
-
-
-
-
 addBeverageButton
     .addEventListener('click', () => {
         beverageCount++;
         const clonedBeverageForm = beverageForm.cloneNode(true);
         clonedBeverageForm.querySelector('.beverage-count').textContent = `Напиток №${beverageCount}`
+
+        clonedBeverageForm
+            .querySelectorAll('input[type=radio]')
+            .forEach((e) => {
+                e.name = `milk${beverageCount}`;
+                e.selected = false;
+            });
+
+        clonedBeverageForm
+            .querySelectorAll('input[type=checkbox]')
+            .forEach((e) => e.checked = false);
 
         let removeButton = clonedBeverageForm.querySelector('.remove-button')
         removeButton.addEventListener('click', function () {
@@ -29,7 +36,10 @@ function deleteBeverage(beverage) {
     let beverages = document.getElementsByClassName('beverage')
 
     for (let i = 0; i < beverageCount; i++) {
-        beverages[i].querySelector('.beverage-count').textContent = `Напиток №${i + 1}`
+        beverages[i].querySelector('.beverage-count').textContent = `Напиток №${i + 1}`;
+        beverages[i]
+            .querySelectorAll('input[type=radio]')
+            .forEach((e) => e.name = `milk${i + 1}`);
     }
 }
 
@@ -42,10 +52,56 @@ const modal = document.querySelector('.modal');
 const submitButton = document.querySelector('.submit-button');
 const modalContent = document.querySelector('.modal-content');
 const modalClose = document.querySelector('.modal-close');
+const modalTable = modalContent.querySelector('table');
 
 submitButton.addEventListener('click', (e) => {
     e.preventDefault();
-    modalContent.textContent = `Вы заказали ${formatDrinkWord(beverageCount)}`;
+    modalContent.querySelector('p').textContent = `Вы заказали ${formatDrinkWord(beverageCount)}`;
+
+    modalTable
+        .querySelector('tbody')
+        .querySelectorAll('tr')
+        .forEach((e) => e.remove());
+
+    for (const form of document.querySelectorAll('.beverage')) {
+        const row = document.createElement('tr');
+
+        const drinkColumn = document.createElement('td');
+        const options = form.querySelectorAll('option');
+        for (const option of options) {
+            if (option.selected) {
+                drinkColumn.textContent = option.textContent;
+                break;
+            }
+        }
+        row.appendChild(drinkColumn);
+
+        const milkColumn = document.createElement('td');
+        const radioInputs =  form.querySelectorAll('input[type=radio]');
+        for (const input of radioInputs) {
+            if (input.checked) {
+                milkColumn.textContent = input.nextElementSibling.textContent;
+                break;
+            }
+        }
+        row.appendChild(milkColumn);
+
+        const additionalColumn = document.createElement('td');
+        const checkboxInputs =  form.querySelectorAll('input[type=checkbox]');
+        const additional = [];
+        for (const input of checkboxInputs) {
+            if (input.checked) {
+                additional.push(input.nextElementSibling.textContent);
+            }
+        }
+        additionalColumn.textContent = additional.join(', ');
+        row.appendChild(additionalColumn);
+
+        modalTable
+            .querySelector('tbody')
+            .appendChild(row);
+    }
+
     modal.style.display = 'block'
 });
 
