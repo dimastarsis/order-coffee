@@ -33,6 +33,11 @@ function deleteBeverage(beverage) {
     }
 }
 
+function applyText(textarea, parent) {
+    parent.getElementsByClassName("user-text")[0].innerHTML = textarea.value
+        .replace(/(срочно)|(быстрее)|(побыстрее)|(скорее)|(поскорее)|(очень нужно)/gi, "<b>$&</b>");
+}
+
 const modal = document.querySelector('.modal');
 const submitButton = document.querySelector('.submit-button');
 const modalContent = document.querySelector('.modal-content');
